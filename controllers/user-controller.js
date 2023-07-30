@@ -35,15 +35,26 @@ const userController = {
 			body,
 			{ new: true, runValidators: true },
 		)
-		.select('-__v')
-		.then(dbUserData => {
-			if (!dbUserData) {
-				res.status(404).json({ message: 'No user found with this id!' });
-				return;
-			}
-			res.json(dbUserData);
-		});
+			.select('-__v')
+			.then(dbUserData => {
+				if (!dbUserData) {
+					res.status(404).json({ message: 'No user found with this id!' });
+					return;
+				}
+				res.json(dbUserData);
+			});
 	},
+	deleteUser({ params }, res) {
+		User.findOneAndDelete({ _id: params.id })
+			.then(dbUserData => {
+				if (!dbUserData) {
+					res.status(404).json({ message: 'No user found with this id!' });
+					return;
+				}
+				res.json(dbUserData);
+			})
+			.catch(err => res.json(err));
+	}
 };
 
 module.exports = { ...userController };
